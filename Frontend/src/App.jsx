@@ -9,7 +9,10 @@ import Product from "./pages/Product";
 import Login from "./pages/Login";
 import Cart from './pages/Cart';
 import OrderPage from './pages/OrderPage';
-import AdminPage from './pages/AdminPage';
+import AdminOverview from './components/admin/AdminOverview';
+import AdminProduct from "./components/admin/Product";
+import AdminOrders from "./components/admin/Orders";
+import AdminFeedbacks from "./components/admin/Feedback";
 
 function App() {
   return (
@@ -30,8 +33,10 @@ function App() {
 
         {/* Admin Routes */}
         <Route path="/admin" element={<AdminLayout />}>
-          <Route index element={<AdminPage />} />
-          {/* Add more admin-only routes here */}
+          <Route path="overview"  element={<AdminOverview />} />
+          <Route path="products" element={<AdminProduct />} /> {/* <-- This line */}
+          <Route path="orders" element={<AdminOrders />} /> {/* <-- This line */}
+          <Route path="feedbacks" element={<AdminFeedbacks />} /> {/* <-- This line */}
         </Route>
 
       </Routes>

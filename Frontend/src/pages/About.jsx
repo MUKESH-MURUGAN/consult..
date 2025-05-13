@@ -2,9 +2,9 @@ import React from "react";
 
 const About = () => {
   return (
-    <div className="pt-20 bg-gray-100 min-h-screen px-4">
+    <div className="pt-20  bg-gray-100 min-h-screen px-4">
       {/* About Section */}
-      <div className="max-w-4xl mx-auto mb-10">
+      <div className="max-w-4xl mt-15 mx-auto mb-10">
         <h2 className="text-4xl font-bold text-center mb-4">ABOUT US</h2>
         <p className="text-center mb-6 text-gray-700">
           Welcome to TASTE IT – the perfect place to unwind and sip on the finest teas in town. 
