@@ -43,18 +43,9 @@ const Login = () => {
   };
 
   return (
-    <div className="relative min-h-screen flex justify-center items-start pt-36 bg-gray-100">
-      {/* Overlay when loading */}
-      {loading && (
-        <div className="absolute inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-center">
-          <div className="bg-white px-6 py-4 rounded shadow-lg text-center">
-            <div className="loader mb-2 border-4 border-orange-500 border-t-transparent rounded-full w-8 h-8 animate-spin"></div>
-            <p className="text-sm font-medium text-gray-700">Please wait...</p>
-          </div>
-        </div>
-      )}
+    <div className="relative min-h-screen flex justify-center items-start bg-gray-100 pt-40 md:pt-44">
 
-      <div className={`w-full max-w-sm p-8 bg-white rounded-lg shadow-md text-center z-10 ${loading ? "pointer-events-none opacity-50" : ""}`}>
+      <div className="w-full max-w-sm p-8 bg-white rounded-lg shadow-md text-center z-10">
         <h2 className="text-2xl font-bold mb-6 text-gray-800">
           {isLogin ? "Login to Your Account" : "Create a New Account"}
         </h2>

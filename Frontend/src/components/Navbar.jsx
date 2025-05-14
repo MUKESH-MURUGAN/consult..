@@ -43,39 +43,47 @@ const Navbar = () => {
         </div>
 
         <nav className="hidden md:flex flex-row items-center text-lg font-medium gap-8">
-          <Link
-            to="/home"
-            className={`pb-1 ${isActive("/home") ? "border-b-4 border-orange-500" : ""}`}
-          >
-            Home
-          </Link>
-          <Link
-            to="/menu"
-            className={`pb-1 ${isActive("/menu") ? "border-b-4 border-orange-500" : ""}`}
-          >
-            Menu
-          </Link>
-          <Link
-            to="/about"
-            className={`pb-1 ${isActive("/about") ? "border-b-4 border-orange-500" : ""}`}
-          >
-            About Us
-          </Link>
-          <Link
-            to="/products"
-            className={`pb-1 ${isActive("/products") ? "border-b-4 border-orange-500" : ""}`}
-          >
-            Products
-          </Link>
-          <Link
-            to="/cart"
-            className={`flex items-center gap-1 pb-1 ${
-              isActive("/cart") ? "border-b-4 border-orange-500" : ""
-            }`}
-          >
-            <BsCart4 /> Cart
-          </Link>
-        </nav>
+  <Link
+    to="/home"
+    className={`pb-1 ${isActive("/home") ? "border-b-4 border-orange-500" : ""}`}
+  >
+    Home
+  </Link>
+  <Link
+    to="/menu"
+    className={`pb-1 ${isActive("/menu") ? "border-b-4 border-orange-500" : ""}`}
+  >
+    Menu
+  </Link>
+  <Link
+    to="/about"
+    className={`pb-1 ${isActive("/about") ? "border-b-4 border-orange-500" : ""}`}
+  >
+    About Us
+  </Link>
+  <Link
+    to="/products"
+    className={`pb-1 ${isActive("/products") ? "border-b-4 border-orange-500" : ""}`}
+  >
+    Products
+  </Link>
+   <Link
+    to="/cart"
+    className={`flex items-center gap-1 pb-1 ${
+      isActive("/cart") ? "border-b-4 border-orange-500" : ""
+    }`}
+  >
+    <BsCart4 /> Cart
+  </Link>
+  <Link
+    to="/orderhistory"
+    className={`pb-1 ${isActive("/orders") ? "border-b-4 border-orange-500" : ""}`}
+  >
+    Order History
+  </Link>
+ 
+</nav>
+
 
         <div className="hidden lg:flex items-center gap-4">
           {user ? (

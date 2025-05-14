@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { db } from "../../../Firebase";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, deleteDoc, doc, setDoc, Timestamp } from "firebase/firestore";
 
 const AdminOrders = () => {
   const [orders, setOrders] = useState([]);
@@ -25,6 +25,57 @@ const AdminOrders = () => {
       alert("Failed to load orders.");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const markAsDelivered = async (order) => {
+    if (window.confirm("Are you sure you want to mark this order as delivered?")) {
+      setLoading(true);
+      try {
+        // First, update the order status to "Delivered"
+        await setDoc(doc(db, "orders", order.id), {
+          ...order,
+          status: "Delivered",
+          deliveredAt: Timestamp.now(), // Add delivered timestamp
+        });
+
+        // Move the order to the "Admin orderHistory" collection
+        await setDoc(doc(db, "AdminorderHistory", order.id), {
+          ...order,
+          status: "Delivered",
+          deliveredAt: Timestamp.now(),
+        });
+
+        // Now, delete the order from the "orders" collection
+        await deleteDoc(doc(db, "orders", order.id));
+
+        fetchOrders();
+        alert("Order marked as delivered and moved to history.");
+      } catch (error) {
+        console.error("Failed to mark order as delivered:", error);
+        alert("Failed to mark order as delivered.");
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
+  const deleteOrder = async (orderId) => {
+    if (window.confirm("Are you sure you want to delete this order?")) {
+      setLoading(true);
+      try {
+        // Delete the order
+        await deleteDoc(doc(db, "orders", orderId));
+
+        // Fetch updated orders
+        fetchOrders();
+        alert("Order deleted successfully!");
+      } catch (error) {
+        console.error("Failed to delete order:", error);
+        alert("Failed to delete order.");
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
@@ -80,6 +131,30 @@ const AdminOrders = () => {
               <p className="text-right mt-4 font-bold text-lg text-green-600">
                 Total Amount: ${order.total}
               </p>
+
+              {/* Mark as Delivered button */}
+              {order.status !== "Delivered" && (
+                <div className="mt-4 text-right">
+                  <button
+                    onClick={() => markAsDelivered(order)}
+                    className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+                  >
+                    Mark as Delivered
+                  </button>
+                </div>
+              )}
+
+              {/* Delete button for each order */}
+              {order.status === "Delivered" && (
+                <div className="mt-4 text-right">
+                  <button
+                    onClick={() => deleteOrder(order.id)}
+                    className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600"
+                  >
+                    Delete Delivered Order
+                  </button>
+                </div>
+              )}
             </div>
           ))}
         </div>

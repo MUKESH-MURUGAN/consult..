@@ -13,6 +13,8 @@ import AdminOverview from './components/admin/AdminOverview';
 import AdminProduct from "./components/admin/Product";
 import AdminOrders from "./components/admin/Orders";
 import AdminFeedbacks from "./components/admin/Feedback";
+import OrderHistory from "./components/OrderHistory";
+import DeliveredOrders from "./components/admin/History";
 
 function App() {
   return (
@@ -29,6 +31,7 @@ function App() {
           <Route path="login" element={<Login />} />
           <Route path="cart" element={<Cart />} />
           <Route path="order" element={<OrderPage />} />
+          <Route path="orderhistory" element={<OrderHistory />} />
         </Route>
 
         {/* Admin Routes */}
@@ -37,6 +40,7 @@ function App() {
           <Route path="products" element={<AdminProduct />} /> {/* <-- This line */}
           <Route path="orders" element={<AdminOrders />} /> {/* <-- This line */}
           <Route path="feedbacks" element={<AdminFeedbacks />} /> {/* <-- This line */}
+          <Route path="history" element={<DeliveredOrders />} /> {/* <-- This line */}
         </Route>
 
       </Routes>

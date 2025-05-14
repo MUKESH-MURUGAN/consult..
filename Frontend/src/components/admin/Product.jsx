@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { db } from "../../../Firebase";
-import { collection, addDoc, getDocs } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  getDocs,
+  updateDoc,
+  deleteDoc,
+  doc,
+} from "firebase/firestore";
 
 const AdminProduct = () => {
   const [products, setProducts] = useState([]);
@@ -10,6 +17,7 @@ const AdminProduct = () => {
     detail: "",
     img: "",
   });
+  const [editingId, setEditingId] = useState(null); // null = add mode
   const [loading, setLoading] = useState(false);
 
   const fetchProducts = async () => {
@@ -48,27 +56,78 @@ const AdminProduct = () => {
     }
 
     try {
-      await addDoc(collection(db, "products"), {
-        name,
-        price: parseFloat(price),
-        detail,
-        img,
-      });
-      alert("Product added!");
+      if (editingId) {
+        // Update
+        const docRef = doc(db, "products", editingId);
+        await updateDoc(docRef, {
+          name,
+          price: parseFloat(price),
+          detail,
+          img,
+        });
+        alert("✅ Product updated!");
+      } else {
+        // Add
+        await addDoc(collection(db, "products"), {
+          name,
+          price: parseFloat(price),
+          detail,
+          img,
+        });
+        alert("✅ Product added!");
+      }
+
       setForm({ name: "", price: "", detail: "", img: "" });
-      fetchProducts(); // refresh list
+      setEditingId(null);
+      fetchProducts();
     } catch (err) {
-      console.error("Error adding product:", err);
-      alert("Failed to add product.");
+      console.error("Error saving product:", err);
+      alert("Failed to save product.");
     }
+  };
+
+  const handleEdit = (product) => {
+    setForm({
+      name: product.name,
+      price: product.price,
+      detail: product.detail,
+      img: product.img || "",
+    });
+    setEditingId(product.id);
+  };
+
+  const handleDelete = async (id) => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this product?");
+    if (!confirmDelete) return;
+
+    try {
+      await deleteDoc(doc(db, "products", id));
+      alert("🗑️ Product deleted!");
+      fetchProducts();
+      if (editingId === id) {
+        setEditingId(null);
+        setForm({ name: "", price: "", detail: "", img: "" });
+      }
+    } catch (err) {
+      console.error("Error deleting product:", err);
+      alert("Failed to delete product.");
+    }
+  };
+
+  const cancelEdit = () => {
+    setEditingId(null);
+    setForm({ name: "", price: "", detail: "", img: "" });
   };
 
   return (
     <div className="p-6">
       <h1 className="text-3xl font-bold mb-6">Manage Products</h1>
 
-      {/* Product Form */}
+      {/* Form */}
       <form onSubmit={handleSubmit} className="mb-6 bg-white p-4 rounded shadow">
+        <h2 className="text-xl font-semibold mb-2">
+          {editingId ? "Edit Product" : "Add New Product"}
+        </h2>
         <div className="mb-2">
           <label className="block text-sm font-medium">Product Name</label>
           <input
@@ -114,12 +173,23 @@ const AdminProduct = () => {
           />
         </div>
 
-        <button
-          type="submit"
-          className="bg-blue-600 text-white px-4 py-2 mt-3 rounded hover:bg-blue-700"
-        >
-          Add Product
-        </button>
+        <div className="flex gap-2 mt-3">
+          <button
+            type="submit"
+            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+          >
+            {editingId ? "Save Changes" : "Add Product"}
+          </button>
+          {editingId && (
+            <button
+              type="button"
+              onClick={cancelEdit}
+              className="text-red-600 border border-red-600 px-4 py-2 rounded hover:bg-red-50"
+            >
+              Cancel
+            </button>
+          )}
+        </div>
       </form>
 
       {/* Product List */}
@@ -128,7 +198,7 @@ const AdminProduct = () => {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {products.map((p) => (
-            <div key={p.id} className="border p-4 rounded shadow bg-white">
+            <div key={p.id} className="border p-4 rounded shadow bg-white relative">
               {p.img && (
                 <img
                   src={p.img}
@@ -139,6 +209,21 @@ const AdminProduct = () => {
               <h2 className="text-xl font-semibold">{p.name}</h2>
               <p className="text-sm text-gray-600 mb-1">${p.price}</p>
               <p className="text-sm text-gray-600 mb-2">{p.detail}</p>
+
+              <div className="flex gap-2">
+                <button
+                  onClick={() => handleEdit(p)}
+                  className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => handleDelete(p.id)}
+                  className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                >
+                  Delete
+                </button>
+              </div>
             </div>
           ))}
         </div>
