@@ -18,6 +18,7 @@ import cf07 from "../assets/cf07.webp";
 import cf08 from "../assets/cf08.webp";
 import cf09 from "../assets/cf09.webp";
 import co01 from "../assets/co01.webp";
+import co02 from "../assets/co2.jpg";
 import TeaCard from '../menu-cards/Teacard';
 const Menu = () => {
   return (
@@ -58,14 +59,14 @@ const Menu = () => {
         <h2 className="text-7xl ms-5 mt-5 font-bold mb-4">Snacks</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 md:grid-cols-4 gap-3">
           <TeaCard id="tea01" imageUrl={co01} name={"Dark chocolate"}/> 
-          <TeaCard id="tea02" imageUrl={tea02} name={"Berry Lemon Tea"}/> 
-          <TeaCard id="tea03" imageUrl={tea03} name={"Ginger Tea"}/> 
+          <TeaCard id="tea02" imageUrl={co02} name={"Milk chocolate"}/> 
+          {/* <TeaCard id="tea03" imageUrl={tea03} name={"Ginger Tea"}/> 
           <TeaCard id="tea04" imageUrl={tea04} name={"Honey Citrus Tea"}/> 
           <TeaCard id="tea05" imageUrl={tea05} name={"Cinnamon Berry Tea"}/> 
           <TeaCard id="tea06" imageUrl={tea06} name={"Rose Tea"}/> 
           <TeaCard id="tea07" imageUrl={tea07} name={"Raspberry Tea"}/> 
           <TeaCard id="tea08" imageUrl={tea08} name={"Green Tea"}/> 
-          <TeaCard id="tea09" imageUrl={tea09} name={"Golden Milk Tea"}/> 
+          <TeaCard id="tea09" imageUrl={tea09} name={"Golden Milk Tea"}/>  */}
          
         </div>
       </div>
