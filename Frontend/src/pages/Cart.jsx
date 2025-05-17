@@ -32,9 +32,9 @@ const Cart = () => {
                   />
                   <div className="flex-1">
                     <h2 className="font-semibold text-gray-800">{item.name}</h2>
-                    <p className="text-sm text-gray-600">Price: ${item.price}</p>
+                    <p className="text-sm text-gray-600">price: ₹{item.price}</p>
                     <p className="text-sm text-gray-600">Quantity: {item.quantity}</p>
-                    <p className="text-sm font-medium text-gray-700">Total: ${item.totalPrice}</p>
+                    <p className="text-sm font-medium text-gray-700">total: ₹{item.totalPrice}</p>
                   </div>
                   <button
                     onClick={() => removeFromCart(item.id)}
@@ -46,7 +46,7 @@ const Cart = () => {
               ))}
             </ul>
             <div className="mt-6 font-bold text-lg text-right text-gray-800">
-              Total: ${total}
+              total: ₹{total}
             </div>
 
             <div className="mt-8 flex justify-center">

@@ -118,10 +118,10 @@ const AdminOrders = () => {
                     />
                     <div>
                       <p className="font-semibold">{item.name}</p>
-                      <p className="text-sm text-gray-600">Price: ${item.price}</p>
+                      <p className="text-sm text-gray-600">price: ₹{item.price}</p>
                       <p className="text-sm text-gray-600">Qty: {item.quantity}</p>
                       <p className="text-sm text-gray-600">
-                        Total: ${item.totalPrice}
+                        total: ₹{item.totalPrice}
                       </p>
                     </div>
                   </div>

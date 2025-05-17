@@ -118,9 +118,9 @@ const Order = () => {
                   />
                   <div className="flex-1">
                     <h3 className="font-semibold text-gray-800">{item.name}</h3>
-                    <p className="text-sm text-gray-600">Price: ${item.price}</p>
+                    <p className="text-sm text-gray-600">price: ₹{item.price}</p>
                     <p className="text-sm text-gray-600">Quantity: {item.quantity}</p>
-                    <p className="text-sm font-medium text-gray-700">Total: ${item.totalPrice}</p>
+                    <p className="text-sm font-medium text-gray-700">total: ₹{item.totalPrice}</p>
                   </div>
                   <button
                     onClick={() => removeItemFromCart(item.id)}

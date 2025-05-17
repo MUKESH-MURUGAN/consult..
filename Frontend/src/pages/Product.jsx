@@ -87,7 +87,7 @@ const Product = () => {
                   className="w-full h-40 object-cover rounded-md"
                 />
                 <h2 className="text-lg font-semibold mt-2">{p.name}</h2>
-                <p className="text-gray-700 mt-1">Price: ${p.price}</p>
+                <p className="text-gray-700 mt-1">Price:  ₹{p.price}</p>
                 <p className="text-gray-600 text-sm mt-1 line-clamp-2">
                   {p.detail}
                 </p>
@@ -111,7 +111,7 @@ const Product = () => {
                 {selectedProduct.name}
               </h2>
               <p className="text-gray-700 mt-1">
-                Price: ${selectedProduct.price}
+                price: ₹{selectedProduct.price}
               </p>
               <p className="text-gray-600 mt-1">{selectedProduct.detail}</p>
 
@@ -127,7 +127,7 @@ const Product = () => {
               </div>
 
               <p className="mt-2 font-semibold">
-                Total: ${selectedProduct.price * quantity}
+                total: ₹{selectedProduct.price * quantity}
               </p>
 
               <div className="flex justify-between mt-4">
