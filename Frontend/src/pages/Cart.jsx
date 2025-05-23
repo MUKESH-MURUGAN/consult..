@@ -15,7 +15,7 @@ const Cart = () => {
 
   return (
     <div className="p-6 flex justify-center items-center min-h-screen">
-      <div className="w-full max-w-3xl bg-white rounded-2xl shadow-lg p-8">
+      <div className="w-full max-w-3xl mt-24 bg-white rounded-2xl shadow-lg p-8">
         <h1 className="text-3xl font-bold mb-6 text-center">🛒 Your Cart</h1>
 
         {cart.length === 0 ? (
