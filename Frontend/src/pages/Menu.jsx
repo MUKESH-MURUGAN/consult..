@@ -26,7 +26,7 @@ const Menu = () => {
     <div className="p-4">
       {/* Tea Section */}
       <div className="mb-8">
-        <h2 className="text-7xl ms-5 mt-5 font-bold mb-4">Tea</h2>
+        <h2 className="text-7xl ms-5 mt-24 font-bold mb-4">Tea</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
           <TeaCard id="tea01" imageUrl={tea01} name="Spiced Milk Tea" price={45} />
           <TeaCard id="tea02" imageUrl={tea02} name="Berry Lemon Tea" price={50} />

@@ -163,56 +163,68 @@ const Product = () => {
         </div>
 
         {selectedProduct && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white p-6 rounded-lg w-80">
-              <img
-                src={selectedProduct.img}
-                alt={selectedProduct.name}
-                className="w-full h-40 object-cover rounded-md"
-              />
-              <h2 className="text-xl font-semibold mt-3">
-                {selectedProduct.name}
-              </h2>
-              <p className="text-gray-700 mt-1">
-                Price: ₹{selectedProduct.price}
-              </p>
-              <p className="text-gray-500 italic">
-                Category: {selectedProduct.category}
-              </p>
-              <p className="text-gray-600 mt-1">{selectedProduct.detail}</p>
+  <div className="fixed inset-0 mt-10 bg-opacity-99 flex items-center justify-center z-50">
+    <div className="bg-white rounded-2xl shadow-lg w-96 p-6 relative">
+      <button
+        onClick={() => setSelectedProduct(null)}
+        className="absolute top-3 right-3 text-gray-500 hover:text-red-500"
+        title="Close"
+      >
+        ✕
+      </button>
 
-              <div className="mt-3">
-                <label className="block text-sm">Quantity:</label>
-                <input
-                  type="number"
-                  min="1"
-                  value={quantity}
-                  onChange={(e) => setQuantity(Number(e.target.value))}
-                  className="border px-2 py-1 w-full rounded mt-1"
-                />
-              </div>
+      <img
+        src={selectedProduct.img}
+        alt={selectedProduct.name}
+        className="w-full h-48 object-cover rounded-lg mb-4"
+      />
 
-              <p className="mt-2 font-semibold">
-                Total: ₹{selectedProduct.price * quantity}
-              </p>
+      <h2 className="text-2xl font-bold text-gray-800">{selectedProduct.name}</h2>
+      <p className="text-lg text-green-600 font-semibold mt-2">
+        ₹{selectedProduct.price}
+      </p>
+      <p className="text-sm text-gray-500 italic mt-1">
+        Category: {selectedProduct.category}
+      </p>
+      <p className="text-gray-700 text-sm mt-3">
+        {selectedProduct.detail}
+      </p>
 
-              <div className="flex justify-between mt-4">
-                <button
-                  onClick={handleAddToCart}
-                  className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-                >
-                  Add to Cart
-                </button>
-                <button
-                  onClick={() => setSelectedProduct(null)}
-                  className="text-red-500"
-                >
-                  Cancel
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
+      <div className="mt-4">
+        <label className="block text-sm font-medium text-gray-700">
+          Quantity:
+        </label>
+        <input
+          type="number"
+          min="1"
+          value={quantity}
+          onChange={(e) => setQuantity(Number(e.target.value))}
+          className="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
+        />
+      </div>
+
+      <p className="mt-3 font-medium text-right text-gray-700">
+        Total: ₹{selectedProduct.price * quantity}
+      </p>
+
+      <div className="mt-5 flex justify-between">
+        <button
+          onClick={handleAddToCart}
+          className="bg-green-500 text-white font-semibold px-4 py-2 rounded-lg hover:bg-green-600 transition"
+        >
+          Add to Cart
+        </button>
+        <button
+          onClick={() => setSelectedProduct(null)}
+          className="text-gray-600 hover:text-red-500 transition"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
       </div>
     </div>
   );
