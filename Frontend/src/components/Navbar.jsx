@@ -53,7 +53,7 @@ const Navbar = () => {
     to="/menu"
     className={`pb-1 ${isActive("/menu") ? "border-b-4 border-orange-500" : ""}`}
   >
-    Menu
+    Shop Menu
   </Link>
   <Link
     to="/about"
