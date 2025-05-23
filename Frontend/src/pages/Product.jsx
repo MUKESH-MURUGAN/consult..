@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { collection, getDocs } from "firebase/firestore";
-import { db } from "../../Firebase"; // Ensure this points correctly
+import { db } from "../../Firebase";
 import { CartContext } from "../components/CartContext";
 
 const Product = () => {
@@ -9,31 +9,49 @@ const Product = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("all");
+  const [priceFilter, setPriceFilter] = useState("all");
+
   const { addToCart } = useContext(CartContext);
 
-  const fetchProducts = async () => {
-    try {
-      const querySnapshot = await getDocs(collection(db, "products"));
-      const productList = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setProducts(productList);
-      setFilteredProducts(productList);
-    } catch (error) {
-      console.error("Error fetching products:", error);
-    }
-  };
-
   useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "products"));
+        const productList = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setProducts(productList);
+        setFilteredProducts(productList);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
     fetchProducts();
   }, []);
 
-  const handleSearch = () => {
+  useEffect(() => {
+    applyFilters();
+  }, [searchTerm, categoryFilter, priceFilter]);
+
+  const applyFilters = () => {
     const term = searchTerm.toLowerCase();
-    const filtered = products.filter((product) =>
-      product.name.toLowerCase().includes(term)
-    );
+    const filtered = products.filter((product) => {
+      const matchName = product.name.toLowerCase().includes(term);
+      const matchCategory =
+        categoryFilter === "all" || product.category === categoryFilter;
+
+      const price = parseFloat(product.price);
+      const matchPrice =
+        priceFilter === "all" ||
+        (priceFilter === "50-100" && price >= 50 && price <= 100) ||
+        (priceFilter === "100-150" && price > 100 && price <= 150) ||
+        (priceFilter === "150+" && price > 150);
+
+      return matchName && matchCategory && matchPrice;
+    });
+
     setFilteredProducts(filtered);
   };
 
@@ -50,9 +68,9 @@ const Product = () => {
   return (
     <div className="p-4">
       <div className="p-4 relative mt-20">
-        <div className="flex flex-wrap items-center justify-between mb-4">
+        <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
           <h1 className="text-2xl font-bold">Product List</h1>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             <input
               type="text"
               placeholder="Search products..."
@@ -60,12 +78,28 @@ const Product = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
               className="border px-2 py-1 rounded"
             />
-            <button
-              onClick={handleSearch}
-              className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600"
+
+            <select
+              value={categoryFilter}
+              onChange={(e) => setCategoryFilter(e.target.value)}
+              className="border px-2 py-1 rounded"
             >
-              Search
-            </button>
+              <option value="all">All Categories</option>
+              <option value="tea">Tea</option>
+              <option value="coffee">Coffee</option>
+              <option value="sweet">Sweet</option>
+            </select>
+
+            <select
+              value={priceFilter}
+              onChange={(e) => setPriceFilter(e.target.value)}
+              className="border px-2 py-1 rounded"
+            >
+              <option value="all">All Prices</option>
+              <option value="50-100">₹50 - ₹100</option>
+              <option value="100-150">₹100 - ₹150</option>
+              <option value="150+">₹150+</option>
+            </select>
           </div>
         </div>
 
@@ -87,7 +121,8 @@ const Product = () => {
                   className="w-full h-40 object-cover rounded-md"
                 />
                 <h2 className="text-lg font-semibold mt-2">{p.name}</h2>
-                <p className="text-gray-700 mt-1">Price:  ₹{p.price}</p>
+                <p className="text-gray-700 mt-1">Price: ₹{p.price}</p>
+                <p className="text-gray-500 text-sm italic">Category: {p.category}</p>
                 <p className="text-gray-600 text-sm mt-1 line-clamp-2">
                   {p.detail}
                 </p>
@@ -111,8 +146,9 @@ const Product = () => {
                 {selectedProduct.name}
               </h2>
               <p className="text-gray-700 mt-1">
-                price: ₹{selectedProduct.price}
+                Price: ₹{selectedProduct.price}
               </p>
+              <p className="text-gray-500 italic">Category: {selectedProduct.category}</p>
               <p className="text-gray-600 mt-1">{selectedProduct.detail}</p>
 
               <div className="mt-3">
@@ -127,7 +163,7 @@ const Product = () => {
               </div>
 
               <p className="mt-2 font-semibold">
-                total: ₹{selectedProduct.price * quantity}
+                Total: ₹{selectedProduct.price * quantity}
               </p>
 
               <div className="flex justify-between mt-4">

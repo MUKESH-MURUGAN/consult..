@@ -129,7 +129,7 @@ const AdminOrders = () => {
               </div>
 
               <p className="text-right mt-4 font-bold text-lg text-green-600">
-                Total Amount: ${order.total}
+                Total Amount: ₹{order.total}
               </p>
 
               {/* Mark as Delivered button */}

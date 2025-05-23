@@ -2,22 +2,26 @@ import React, { useState, useEffect } from "react";
 import { db } from "../../../Firebase";
 import {
   collection,
-  addDoc,
   getDocs,
   updateDoc,
   deleteDoc,
   doc,
+  setDoc,
+  getDoc,
 } from "firebase/firestore";
 
 const AdminProduct = () => {
   const [products, setProducts] = useState([]);
   const [form, setForm] = useState({
+    id: "",
     name: "",
     price: "",
     detail: "",
     img: "",
+    category: "tea",
+    stock: "",
   });
-  const [editingId, setEditingId] = useState(null); // null = add mode
+  const [editingId, setEditingId] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const fetchProducts = async () => {
@@ -48,36 +52,53 @@ const AdminProduct = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { name, price, detail, img } = form;
+    const { id, name, price, detail, img, category, stock } = form;
 
-    if (!name || !price) {
-      alert("Name and price are required.");
+    if (!id || !name || !price || !stock) {
+      alert("ID, Name, Price, and Stock are required.");
       return;
     }
 
     try {
+      const docRef = doc(db, "products", id);
+
       if (editingId) {
-        // Update
-        const docRef = doc(db, "products", editingId);
         await updateDoc(docRef, {
           name,
           price: parseFloat(price),
           detail,
           img,
+          category,
+          stock: parseInt(stock),
         });
         alert("✅ Product updated!");
       } else {
-        // Add
-        await addDoc(collection(db, "products"), {
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          alert("❌ A product with this ID already exists.");
+          return;
+        }
+
+        await setDoc(docRef, {
           name,
           price: parseFloat(price),
           detail,
           img,
+          category,
+          stock: parseInt(stock),
         });
         alert("✅ Product added!");
       }
 
-      setForm({ name: "", price: "", detail: "", img: "" });
+      setForm({
+        id: "",
+        name: "",
+        price: "",
+        detail: "",
+        img: "",
+        category: "tea",
+        stock: "",
+      });
       setEditingId(null);
       fetchProducts();
     } catch (err) {
@@ -88,10 +109,13 @@ const AdminProduct = () => {
 
   const handleEdit = (product) => {
     setForm({
+      id: product.id,
       name: product.name,
       price: product.price,
       detail: product.detail,
       img: product.img || "",
+      category: product.category || "tea",
+      stock: product.stock || "",
     });
     setEditingId(product.id);
   };
@@ -106,7 +130,7 @@ const AdminProduct = () => {
       fetchProducts();
       if (editingId === id) {
         setEditingId(null);
-        setForm({ name: "", price: "", detail: "", img: "" });
+        setForm({ id: "", name: "", price: "", detail: "", img: "", category: "tea", stock: "" });
       }
     } catch (err) {
       console.error("Error deleting product:", err);
@@ -116,18 +140,31 @@ const AdminProduct = () => {
 
   const cancelEdit = () => {
     setEditingId(null);
-    setForm({ name: "", price: "", detail: "", img: "" });
+    setForm({ id: "", name: "", price: "", detail: "", img: "", category: "tea", stock: "" });
   };
 
   return (
     <div className="p-6">
       <h1 className="text-3xl font-bold mb-6">Manage Products</h1>
 
-      {/* Form */}
       <form onSubmit={handleSubmit} className="mb-6 bg-white p-4 rounded shadow">
         <h2 className="text-xl font-semibold mb-2">
           {editingId ? "Edit Product" : "Add New Product"}
         </h2>
+
+        <div className="mb-2">
+          <label className="block text-sm font-medium">Product ID</label>
+          <input
+            type="text"
+            name="id"
+            value={form.id}
+            onChange={handleChange}
+            className="w-full border px-2 py-1 rounded"
+            required
+            disabled={!!editingId}
+          />
+        </div>
+
         <div className="mb-2">
           <label className="block text-sm font-medium">Product Name</label>
           <input
@@ -173,6 +210,33 @@ const AdminProduct = () => {
           />
         </div>
 
+        <div className="mb-2">
+          <label className="block text-sm font-medium">Category</label>
+          <select
+            name="category"
+            value={form.category}
+            onChange={handleChange}
+            className="w-full border px-2 py-1 rounded"
+            required
+          >
+            <option value="tea">Tea</option>
+            <option value="coffee">Coffee</option>
+            <option value="sweet">Sweet</option>
+          </select>
+        </div>
+
+        <div className="mb-2">
+          <label className="block text-sm font-medium">Stock</label>
+          <input
+            type="number"
+            name="stock"
+            value={form.stock}
+            onChange={handleChange}
+            className="w-full border px-2 py-1 rounded"
+            required
+          />
+        </div>
+
         <div className="flex gap-2 mt-3">
           <button
             type="submit"
@@ -192,7 +256,6 @@ const AdminProduct = () => {
         </div>
       </form>
 
-      {/* Product List */}
       {loading ? (
         <p>Loading products...</p>
       ) : (
@@ -207,10 +270,12 @@ const AdminProduct = () => {
                 />
               )}
               <h2 className="text-xl font-semibold">{p.name}</h2>
-              <p className="text-sm text-gray-600 mb-1">${p.price}</p>
+              <p className="text-sm text-gray-600 mb-1">₹{p.price}</p>
+              <p className="text-sm text-gray-600 mb-1">Stock: {p.stock}</p>
               <p className="text-sm text-gray-600 mb-2">{p.detail}</p>
+              <p className="text-sm text-gray-500 italic">Category: {p.category}</p>
 
-              <div className="flex gap-2">
+              <div className="flex gap-2 mt-2">
                 <button
                   onClick={() => handleEdit(p)}
                   className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600"

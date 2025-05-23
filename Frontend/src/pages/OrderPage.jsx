@@ -2,10 +2,17 @@ import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { CartContext } from "../components/CartContext";
 import { db } from "../../Firebase";
-import { addDoc, collection, Timestamp } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  Timestamp,
+  doc,
+  getDoc,
+  updateDoc,
+} from "firebase/firestore";
 
 const Order = () => {
-  const { cart, setCart } = useContext(CartContext); // Make sure you have a setter for the cart
+  const { cart, setCart } = useContext(CartContext);
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
@@ -14,11 +21,9 @@ const Order = () => {
 
   const total = cart.reduce((acc, item) => acc + item.totalPrice, 0);
 
-  // Set TEST_MODE flag for controlling payment status behavior
-  const TEST_MODE = true; // Set to false in production to require payment
+  const TEST_MODE = true; // Toggle for payment requirement
   const navigate = useNavigate();
 
-  // Load Razorpay script dynamically
   useEffect(() => {
     const script = document.createElement("script");
     script.src = "https://checkout.razorpay.com/v1/checkout.js";
@@ -26,10 +31,9 @@ const Order = () => {
     document.body.appendChild(script);
   }, []);
 
-  // Function to remove an item from the cart
   const removeItemFromCart = (itemId) => {
-    const updatedCart = cart.filter(item => item.id !== itemId);
-    setCart(updatedCart); // Update the cart state
+    const updatedCart = cart.filter((item) => item.id !== itemId);
+    setCart(updatedCart);
   };
 
   const handlePayment = () => {
@@ -39,8 +43,8 @@ const Order = () => {
     }
 
     const options = {
-      key: "rzp_test_OqKM3VAcZ1O5bK", // Replace with your Razorpay key
-      amount: Math.round(total * 100), // Convert ₹ to paise safely
+      key: "rzp_test_OqKM3VAcZ1O5bK",
+      amount: Math.round(total * 100),
       currency: "INR",
       name: "MUKESH",
       description: "Order Payment",
@@ -50,16 +54,9 @@ const Order = () => {
         setPaymentCompleted(true);
         alert("✅ Payment successful!");
       },
-      prefill: {
-        email,
-        contact: phone,
-      },
-      notes: {
-        address,
-      },
-      theme: {
-        color: "#3399cc",
-      },
+      prefill: { email, contact: phone },
+      notes: { address },
+      theme: { color: "#3399cc" },
     };
 
     const rzp = new window.Razorpay(options);
@@ -72,7 +69,6 @@ const Order = () => {
       return;
     }
 
-    // 🚫 Check for payment only if TEST_MODE is off
     if (!TEST_MODE && !paymentCompleted) {
       alert("❌ You must complete the payment before placing the order.");
       return;
@@ -88,9 +84,26 @@ const Order = () => {
     };
 
     try {
+      // Save order to Firestore
       await addDoc(collection(db, "orders"), order);
       await addDoc(collection(db, "orderHistory"), order);
+
+      // Reduce stock for each item
+      for (const item of cart) {
+        const productRef = doc(db, "products", item.id);
+        const productSnapshot = await getDoc(productRef);
+
+        if (productSnapshot.exists()) {
+          const currentStock = productSnapshot.data().stock;
+          const updatedStock = Math.max(currentStock - item.quantity, 0);
+          await updateDoc(productRef, { stock: updatedStock });
+        } else {
+          console.warn(`⚠️ Product with ID ${item.id} not found in Firestore.`);
+        }
+      }
+
       setOrderConfirmed(true);
+      setCart([]); // Clear cart after placing order
       navigate("/orderhistory");
     } catch (error) {
       console.error("Order failed:", error);
@@ -111,16 +124,12 @@ const Order = () => {
             <ul className="space-y-4">
               {cart.map((item) => (
                 <li key={item.id} className="flex gap-4 items-center border rounded-lg p-3 shadow-sm">
-                  <img
-                    src={item.img}
-                    alt={item.name}
-                    className="w-16 h-16 object-cover rounded-lg"
-                  />
+                  <img src={item.img} alt={item.name} className="w-16 h-16 object-cover rounded-lg" />
                   <div className="flex-1">
                     <h3 className="font-semibold text-gray-800">{item.name}</h3>
-                    <p className="text-sm text-gray-600">price: ₹{item.price}</p>
+                    <p className="text-sm text-gray-600">Price: ₹{item.price}</p>
                     <p className="text-sm text-gray-600">Quantity: {item.quantity}</p>
-                    <p className="text-sm font-medium text-gray-700">total: ₹{item.totalPrice}</p>
+                    <p className="text-sm font-medium text-gray-700">Total: ₹{item.totalPrice}</p>
                   </div>
                   <button
                     onClick={() => removeItemFromCart(item.id)}
