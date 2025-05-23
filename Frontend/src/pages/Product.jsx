@@ -56,6 +56,7 @@ const Product = () => {
   };
 
   const handleView = (product) => {
+    if (product.stock === 0) return;
     setSelectedProduct(product);
     setQuantity(1);
   };
@@ -109,26 +110,53 @@ const Product = () => {
           }`}
         >
           {filteredProducts.length > 0 ? (
-            filteredProducts.map((p) => (
-              <div
-                key={p.id}
-                className="border rounded-md p-4 shadow-md w-64 bg-white cursor-pointer hover:shadow-lg transition"
-                onClick={() => handleView(p)}
-              >
-                <img
-                  src={p.img}
-                  alt={p.name}
-                  className="w-full h-40 object-cover rounded-md"
-                />
-                <h2 className="text-lg font-semibold mt-2">{p.name}</h2>
-                <p className="text-gray-700 mt-1">Price: ₹{p.price}</p>
-                <p className="text-gray-500 text-sm italic">Category: {p.category}</p>
-                <p className="text-gray-600 text-sm mt-1 line-clamp-2">
-                  {p.detail}
-                </p>
-                <button className="mt-2 text-blue-500 underline">View</button>
-              </div>
-            ))
+            filteredProducts.map((p) => {
+              const outOfStock = p.stock === 0;
+              return (
+                <div
+                  key={p.id}
+                  className="border rounded-md p-4 shadow-md w-64 bg-white transition"
+                >
+                  <div
+                    className={`relative ${
+                      outOfStock ? "cursor-not-allowed" : "cursor-pointer"
+                    }`}
+                    onClick={() => handleView(p)}
+                  >
+                    <img
+                      src={p.img}
+                      alt={p.name}
+                      className={`w-full h-40 object-cover rounded-md transition ${
+                        outOfStock ? "blur-sm opacity-50" : ""
+                      }`}
+                    />
+                    {outOfStock && (
+                      <div className="absolute top-2 left-2 bg-red-500 text-white text-xs px-2 py-1 rounded">
+                        Out of Stock
+                      </div>
+                    )}
+                  </div>
+                  <h2 className="text-lg font-semibold mt-2">{p.name}</h2>
+                  <p className="text-gray-700 mt-1">Price: ₹{p.price}</p>
+                  <p className="text-gray-500 text-sm italic">
+                    Category: {p.category}
+                  </p>
+                  <p className="text-gray-600 text-sm mt-1 line-clamp-2">
+                    {p.detail}
+                  </p>
+                  <button
+                    className={`mt-2 underline ${
+                      outOfStock
+                        ? "text-gray-400 cursor-not-allowed"
+                        : "text-blue-500 hover:text-blue-600"
+                    }`}
+                    disabled={outOfStock}
+                  >
+                    {outOfStock ? "Out of Stock" : "View"}
+                  </button>
+                </div>
+              );
+            })
           ) : (
             <p className="text-gray-500">No products found.</p>
           )}
@@ -148,7 +176,9 @@ const Product = () => {
               <p className="text-gray-700 mt-1">
                 Price: ₹{selectedProduct.price}
               </p>
-              <p className="text-gray-500 italic">Category: {selectedProduct.category}</p>
+              <p className="text-gray-500 italic">
+                Category: {selectedProduct.category}
+              </p>
               <p className="text-gray-600 mt-1">{selectedProduct.detail}</p>
 
               <div className="mt-3">

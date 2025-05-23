@@ -20,57 +20,50 @@ import cf09 from "../assets/cf09.webp";
 import co01 from "../assets/co01.webp";
 import co02 from "../assets/co02.jpg";
 import TeaCard from '../menu-cards/Teacard';
+
 const Menu = () => {
   return (
-    <div className="pt-20 p-4"> {/* Added pt-20 for top padding */}
+    <div className="p-4">
       {/* Tea Section */}
-      <div className="mb-8"> 
+      <div className="mb-8">
         <h2 className="text-7xl ms-5 mt-5 font-bold mb-4">Tea</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 md:grid-cols-4 gap-3">
-          <TeaCard id="tea01" imageUrl={tea01} name={"Spiced Milk Tea"}/> 
-          <TeaCard id="tea02" imageUrl={tea02} name={"Berry Lemon Tea"}/> 
-          <TeaCard id="tea03" imageUrl={tea03} name={"Ginger Tea"}/> 
-          <TeaCard id="tea04" imageUrl={tea04} name={"Honey Citrus Tea"}/> 
-          <TeaCard id="tea05" imageUrl={tea05} name={"Cinnamon Berry Tea"}/> 
-          <TeaCard id="tea06" imageUrl={tea06} name={"Rose Tea"}/> 
-          <TeaCard id="tea07" imageUrl={tea07} name={"Raspberry Tea"}/> 
-          <TeaCard id="tea08" imageUrl={tea08} name={"Green Tea"}/> 
-          <TeaCard id="tea09" imageUrl={tea09} name={"Golden Milk Tea"}/> 
-         
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+          <TeaCard id="tea01" imageUrl={tea01} name="Spiced Milk Tea" price={45} />
+          <TeaCard id="tea02" imageUrl={tea02} name="Berry Lemon Tea" price={50} />
+          <TeaCard id="tea03" imageUrl={tea03} name="Ginger Tea" price={40} />
+          <TeaCard id="tea04" imageUrl={tea04} name="Honey Citrus Tea" price={55} />
+          <TeaCard id="tea05" imageUrl={tea05} name="Cinnamon Berry Tea" price={50} />
+          <TeaCard id="tea06" imageUrl={tea06} name="Rose Tea" price={48} />
+          <TeaCard id="tea07" imageUrl={tea07} name="Raspberry Tea" price={52} />
+          <TeaCard id="tea08" imageUrl={tea08} name="Green Tea" price={45} />
+          <TeaCard id="tea09" imageUrl={tea09} name="Golden Milk Tea" price={60} />
         </div>
       </div>
 
-      <div className="mb-8"> 
+      {/* Coffee Section */}
+      <div className="mb-8">
         <h2 className="text-7xl ms-5 mt-5 font-bold mb-4">Coffee</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 md:grid-cols-4 gap-3">
-          <TeaCard id="cf01" imageUrl={cf01} name={"Espresso"}/> 
-          <TeaCard id="cf02" imageUrl={cf02} name={"Double Espresso"}/> 
-          <TeaCard id="cf03" imageUrl={cf03} name={"Short Macchiato"}/> 
-          <TeaCard id="cf04" imageUrl={cf04} name={"Long Macchiato"}/> 
-          <TeaCard id="cf05" imageUrl={cf05} name={"Ristretto"}/> 
-          <TeaCard id="cf06" imageUrl={cf06} name={"Long Black "}/> 
-          <TeaCard id="cf07" imageUrl={cf07} name={"Café Latte"}/> 
-          <TeaCard id="cf08" imageUrl={cf08} name={"Cappuccino"}/> 
-          <TeaCard id="cf09" imageUrl={cf09} name={"Flat White"}/> 
-         
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+          <TeaCard id="cf01" imageUrl={cf01} name="Espresso" price={60} />
+          <TeaCard id="cf02" imageUrl={cf02} name="Double Espresso" price={70} />
+          <TeaCard id="cf03" imageUrl={cf03} name="Short Macchiato" price={65} />
+          <TeaCard id="cf04" imageUrl={cf04} name="Long Macchiato" price={68} />
+          <TeaCard id="cf05" imageUrl={cf05} name="Ristretto" price={55} />
+          <TeaCard id="cf06" imageUrl={cf06} name="Long Black" price={60} />
+          <TeaCard id="cf07" imageUrl={cf07} name="Café Latte" price={75} />
+          <TeaCard id="cf08" imageUrl={cf08} name="Cappuccino" price={80} />
+          <TeaCard id="cf09" imageUrl={cf09} name="Flat White" price={78} />
         </div>
       </div>
-      <div className="mb-8"> 
+
+      {/* Snacks Section */}
+      <div className="mb-8">
         <h2 className="text-7xl ms-5 mt-5 font-bold mb-4">Snacks</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 md:grid-cols-4 gap-3">
-          <TeaCard id="co01" imageUrl={co01} name={"Dark chocolate"}/> 
-          <TeaCard id="co02" imageUrl={co02} name={"Milk chocolate"}/> 
-          {/* <TeaCard id="tea03" imageUrl={tea03} name={"Ginger Tea"}/> 
-          <TeaCard id="tea04" imageUrl={tea04} name={"Honey Citrus Tea"}/> 
-          <TeaCard id="tea05" imageUrl={tea05} name={"Cinnamon Berry Tea"}/> 
-          <TeaCard id="tea06" imageUrl={tea06} name={"Rose Tea"}/> 
-          <TeaCard id="tea07" imageUrl={tea07} name={"Raspberry Tea"}/> 
-          <TeaCard id="tea08" imageUrl={tea08} name={"Green Tea"}/> 
-          <TeaCard id="tea09" imageUrl={tea09} name={"Golden Milk Tea"}/>  */}
-         
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+          <TeaCard id="co01" imageUrl={co01} name="Dark chocolate" price={30} />
+          <TeaCard id="co02" imageUrl={co02} name="Milk chocolate" price={28} />
         </div>
       </div>
-      
     </div>
   );
 };

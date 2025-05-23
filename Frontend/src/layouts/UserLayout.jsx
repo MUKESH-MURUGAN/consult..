@@ -6,7 +6,7 @@ const UserLayout = () => {
   return (
     <>
       <Navbar />
-      <main>
+      <main className=" justify-center items-start bg-gray-100">
         <Outlet />
       </main>
       <Footer />
